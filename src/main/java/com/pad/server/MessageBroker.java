@@ -38,7 +38,7 @@ public class MessageBroker {
         if (queue != null) {
             return queue.take();
         } else {
-            throw new RuntimeException("Queue [" + channelName + "] doesn`t exist.");
+            throw new RuntimeException("Channel [" + channelName + "] does not exist.");
         }
     }
 

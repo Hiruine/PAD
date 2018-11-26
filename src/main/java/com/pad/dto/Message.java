@@ -10,6 +10,7 @@ public class Message implements Serializable {
     private String data;
     private String channelName;
     private MessageType type;
+    private String status;
 
     public Message() {
     }
@@ -44,5 +45,13 @@ public class Message implements Serializable {
 
     public void setType(MessageType type) {
         this.type = type;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
