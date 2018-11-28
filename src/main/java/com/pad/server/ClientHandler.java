@@ -1,7 +1,7 @@
 package com.pad.server;
 
 import com.pad.dto.Message;
-import com.pad.dto.converter.GsonConverter;
+import com.pad.dto.converter.JsonConverter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,13 +38,15 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         try {
+            System.out.println("Connected to " + clientSocket.getInetAddress().toString());
+
             input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             output = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()), true);
 
             while (true) {
                 if (input.ready()) {
                     String messageType = readMessageType();
-                    Message message = GsonConverter.convertToDto(messageType, Message.class);
+                    Message message = JsonConverter.convertToDto(messageType, Message.class);
                     String channelName = message.getChannelName();
 
                     switch (message.getType()) {
@@ -52,22 +54,29 @@ public class ClientHandler implements Runnable {
                             System.out.println("Sending message");
                             messageBroker.addMessage(message);
                             publishMessage(message);
+                            break;
                         }
                         case READ_MESSAGE: {
                             processMessage(messageBroker.getMessage(channelName), STATUS_MSG_OK, output);
+                            break;
                         }
                         case CREATE_CHANNEL: {
                             messageBroker.createChannel(channelName);
+                            break;
                         }
                         case CLOSE_CHANNEL: {
                             messageBroker.deleteChannel(channelName);
+                            break;
                         }
                         case SUBSCRIBE: {
                             subscribeTo(channelName);
                             while (messageBroker.hasMessages(channelName)) {
                                 processMessage(messageBroker.getMessage(channelName), STATUS_MSG_PBL, output);
                             }
+                            break;
                         }
+                        default:
+                            break;
                     }
                 }
             }
@@ -79,7 +88,7 @@ public class ClientHandler implements Runnable {
     private void processMessage(Message message, String statusMsgPbl, PrintWriter output) {
         Message obtainedMessage = message;
         obtainedMessage.setStatus(statusMsgPbl);
-        String serializedMessage = GsonConverter.convertToJson(obtainedMessage);
+        String serializedMessage = JsonConverter.convertToJson(obtainedMessage);
         output.println(serializedMessage);
         output.println();
         output.flush();
@@ -99,7 +108,7 @@ public class ClientHandler implements Runnable {
 
     private String readMessageType() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        String line = "";
+        String line;
         while ((line = input.readLine()) != null) {
             if (line.isEmpty()) {
                 break;

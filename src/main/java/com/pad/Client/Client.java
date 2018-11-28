@@ -2,7 +2,7 @@ package com.pad.Client;
 
 import com.pad.dto.Message;
 import com.pad.dto.MessageType;
-import com.pad.dto.converter.GsonConverter;
+import com.pad.dto.converter.JsonConverter;
 import com.pad.server.ClientHandler;
 
 import java.io.BufferedReader;
@@ -30,13 +30,10 @@ public class Client implements Runnable, Closeable {
     private String server;
     private int port;
     private Socket socket;
-    private InetAddress ip;
     private BufferedReader input;
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
     private volatile boolean closeRequested = false;
     private BlockingQueue<Message> messagesToConsume = new ArrayBlockingQueue<>(10);
-
-
 
     private PrintWriter output;
 
@@ -63,7 +60,7 @@ public class Client implements Runnable, Closeable {
         while (!closeRequested) {
             try {
                 String serializedMessage = readMessageType();
-                Message message = GsonConverter.convertToDto(serializedMessage, Message.class);
+                Message message = JsonConverter.convertToDto(serializedMessage, Message.class);
                 if (message.getStatus().equals(ClientHandler.STATUS_MSG_PBL)) {
                     messageObservers.get(message.getChannelName()).forEach(a -> a.consumeMessage(message));
                 } else {
@@ -91,6 +88,7 @@ public class Client implements Runnable, Closeable {
     public void subscribe(String channelName, MessageObserver messageObserver) {
         messageObservers.putIfAbsent(channelName, new HashSet<>());
         messageObservers.get(channelName).add(messageObserver);
+        sendMessage(new Message(channelName, MessageType.SUBSCRIBE));
 
     }
 
@@ -98,7 +96,7 @@ public class Client implements Runnable, Closeable {
         System.out.println("Establishing connection.");
         while (socket == null) {
             try {
-                ip = InetAddress.getByName(server);
+                InetAddress ip = InetAddress.getByName(server);
                 Socket socket = new Socket(ip, port);
                 System.out.println("Connection established on " + server + ":" + port);
                 this.socket = socket;
@@ -122,10 +120,10 @@ public class Client implements Runnable, Closeable {
         sendMessage(channelRequest);
     }
 
-    private void sendMessage(Message message) {
+    public void sendMessage(Message message) {
         String serializedMessage;
         try {
-            serializedMessage = GsonConverter.convertToJson(message);
+            serializedMessage = JsonConverter.convertToJson(message);
             output.println(serializedMessage);
             output.println();
             output.flush();
