@@ -1,4 +1,4 @@
-package com.pad.server;
+package com.pad;
 
 import com.pad.dto.Message;
 

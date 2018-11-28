@@ -6,7 +6,6 @@ public class Message implements Serializable {
 
     private static final long serialVersionUID = 5417324113581673181L;
 
-    private String id;
     private String data;
     private String channelName;
     private MessageType type;
@@ -18,14 +17,6 @@ public class Message implements Serializable {
     public Message(String channelName, MessageType type) {
         this.channelName = channelName;
         this.type = type;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getData() {

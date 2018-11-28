@@ -3,7 +3,7 @@ package com.pad.Client;
 import com.pad.dto.Message;
 import com.pad.dto.MessageType;
 import com.pad.dto.converter.JsonConverter;
-import com.pad.server.ClientHandler;
+import com.pad.ClientHandler;
 
 import java.io.BufferedReader;
 import java.io.Closeable;

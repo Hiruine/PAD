@@ -14,5 +14,7 @@ public class MainReceiver {
             Student student = JsonConverter.convertToDto(message.getData(), Student.class);
             System.out.println(student);
         });
+
+
     }
 }

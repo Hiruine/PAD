@@ -15,7 +15,7 @@ public class MainPublisher {
         client.createChannel("PAD");
 
         Message message = new Message();
-        message.setData(JsonConverter.convertToJson(new Student("Valentin", "TI-153", 22)));
+        message.setData(JsonConverter.convertToJson(new Student("Radu", "TI-153", 22)));
         message.setType(MessageType.SEND_MESSAGE);
         message.setChannelName("PAD");
         client.sendMessage(message);

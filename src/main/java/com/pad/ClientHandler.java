@@ -1,4 +1,4 @@
-package com.pad.server;
+package com.pad;
 
 import com.pad.dto.Message;
 import com.pad.dto.converter.JsonConverter;
@@ -51,7 +51,7 @@ public class ClientHandler implements Runnable {
 
                     switch (message.getType()) {
                         case SEND_MESSAGE: {
-                            System.out.println("Sending message");
+                            System.out.println("Sending message " + message.getData());
                             messageBroker.addMessage(message);
                             publishMessage(message);
                             break;
