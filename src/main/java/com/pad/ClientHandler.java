@@ -18,7 +18,6 @@ public class ClientHandler implements Runnable {
 
     public static final String STATUS_MSG_PBL = "MSG_PBL";
     public static final String STATUS_MSG_OK = "MSG_OK";
-    public static final String STATUS_MSG_ERROR = "MSG_ERROR";
 
     private final MessageBroker messageBroker;
     private final Socket clientSocket;
@@ -29,7 +28,7 @@ public class ClientHandler implements Runnable {
     private static Map<String, Set<PrintWriter>> channelSubscribers = new ConcurrentHashMap<>();
 
 
-    ClientHandler(MessageBroker broker, Socket clientSocket) {
+    public ClientHandler(MessageBroker broker, Socket clientSocket) {
         this.messageBroker = broker;
         this.clientSocket = clientSocket;
     }

@@ -18,6 +18,18 @@ public class MainPublisher {
         message.setData(JsonConverter.convertToJson(new Student("Radu", "TI-153", 22)));
         message.setType(MessageType.SEND_MESSAGE);
         message.setChannelName("PAD");
+
         client.sendMessage(message);
+
+        client.createChannel("UTM");
+
+        Message message2 = new Message();
+        message2.setData(JsonConverter.convertToJson(new Student("Valentin", "TI-153", 22)));
+        message2.setType(MessageType.SEND_MESSAGE);
+        message2.setChannelName("UTM");
+
+        client.sendMessage(message2);
+
+
     }
 }

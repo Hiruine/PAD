@@ -15,6 +15,11 @@ public class MainReceiver {
             System.out.println(student);
         });
 
+        client.subscribe("UTM", message -> {
+            Student student = JsonConverter.convertToDto(message.getData(), Student.class);
+            System.out.println(student);
+        });
+
 
     }
 }
